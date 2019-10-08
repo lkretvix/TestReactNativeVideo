@@ -26,12 +26,15 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 function secondsToTime(time) {
   return `${Math.floor(time / 60)} : ${time % 60 < 10 ? '0' : ''} ${time % 60}`;
 }
+const RATES = [0.25, 0.5, 1.0, 1.25, 1.5, 2.0];
+const DEFAULT_SPEED = 1.0;
 
 export default class App extends Component {
   state = {
     paused: true,
     progress: 0,
     duration: 0,
+    rate: DEFAULT_SPEED,
   };
 
   handleMainButtonTouch = () => {
@@ -46,6 +49,14 @@ export default class App extends Component {
     const position = e.nativeEvent.locationX;
     const progress = (position / 250) * this.state.duration;
     this.player.seek(progress);
+  };
+  handleRateTouch = () => {
+    this.setState({
+      rate:
+        RATES[
+          (RATES.findIndex(rate => rate === this.state.rate) + 1) % RATES.length
+        ],
+    });
   };
   handleEnd = () => {
     this.setState({paused: true, progress: 1});
@@ -75,6 +86,7 @@ export default class App extends Component {
               <Video
                 source={require('./EdPowerBreak.mp4')}
                 paused={this.state.paused}
+                rate={this.state.rate}
                 resizeMode="contain"
                 onLoad={this.handleLoad}
                 onProgress={this.handleProgress}
@@ -108,6 +120,9 @@ export default class App extends Component {
                   Math.floor(this.state.progress * this.state.duration),
                 )}
               </Text>
+              <TouchableWithoutFeedback onPress={this.handleRateTouch}>
+                <Text style={styles.rate}>{`${this.state.rate}x`}</Text>
+              </TouchableWithoutFeedback>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -120,7 +135,6 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
   },
-
   body: {
     backgroundColor: Colors.white,
   },
@@ -142,5 +156,8 @@ const styles = StyleSheet.create({
   duration: {
     color: '#FFF',
     marginLeft: 15,
+  },
+  rate: {
+    color: '#FFF',
   },
 });
