@@ -37,7 +37,7 @@ export default class App extends Component {
     rate: DEFAULT_SPEED,
   };
 
-  handleMainButtonTouch = () => {
+  handlePlayPausePress = () => {
     if (this.state.progress >= 1) {
       this.player.seek(0);
     }
@@ -83,20 +83,22 @@ export default class App extends Component {
             contentInsetAdjustmentBehavior="automatic"
             style={styles.scrollView}>
             <View style={{height: height + 48}}>
-              <Video
-                source={require('./EdPowerBreak.mp4')}
-                paused={this.state.paused}
-                rate={this.state.rate}
-                resizeMode="contain"
-                onLoad={this.handleLoad}
-                onProgress={this.handleProgress}
-                onEnd={this.handleEnd}
-                ref={ref => (this.player = ref)}
-                style={{height, width: '100%'}}
-              />
+              <TouchableWithoutFeedback onPress={this.handlePlayPausePress}>
+                <Video
+                  source={require('./EdPowerBreak.mp4')}
+                  paused={this.state.paused}
+                  rate={this.state.rate}
+                  resizeMode="contain"
+                  onLoad={this.handleLoad}
+                  onProgress={this.handleProgress}
+                  onEnd={this.handleEnd}
+                  ref={ref => (this.player = ref)}
+                  style={{height, width: '100%'}}
+                />
+              </TouchableWithoutFeedback>
             </View>
             <View style={styles.controls}>
-              <TouchableWithoutFeedback onPress={this.handleMainButtonTouch}>
+              <TouchableWithoutFeedback onPress={this.handlePlayPausePress}>
                 <Icon
                   name={!this.state.paused ? 'pause' : 'play'}
                   size={30}
