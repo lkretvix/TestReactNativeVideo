@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import {
   StyleSheet,
@@ -65,12 +66,14 @@ export default class VideoWithControls extends Component {
   render() {
     const {width} = Dimensions.get('window');
     const height = width * 0.5265;
+    const {video} = this.props;
+
     return (
-      <View>
-        <View style={{height: height + 48}}>
+      <View style={styles.container}>
+        <View style={{height: height + 48, width: '100%'}}>
           <TouchableWithoutFeedback onPress={this.handlePlayPausePress}>
             <Video
-              source={require('../EdPowerBreak.mp4')}
+              source={video}
               paused={this.state.paused}
               rate={this.state.rate}
               resizeMode="contain"
@@ -117,6 +120,7 @@ export default class VideoWithControls extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {width: '100%', alignItems: 'center', justifyContent: 'center'},
   controls: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     height: 48,
@@ -140,3 +144,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
 });
+
+VideoWithControls.PropTypes = {
+  video: PropTypes.string.isRequired,
+};
